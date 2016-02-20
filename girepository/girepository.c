@@ -565,6 +565,7 @@ g_irepository_get_dependencies (GIRepository *repository,
       g_ptr_array_add (out, dependency);
       g_hash_table_iter_steal (&iter);
     }
+  g_hash_table_unref (transitive_dependencies);
 
   /* Add a NULL terminator. */
   g_ptr_array_add (out, NULL);
