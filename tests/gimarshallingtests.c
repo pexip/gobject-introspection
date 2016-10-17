@@ -1588,7 +1588,7 @@ gi_marshalling_tests_array_out_etc (gint first, gint **ints, gint *length, gint 
 void
 gi_marshalling_tests_array_bool_out (gboolean **bools, gint *length)
 {
-  static const gboolean values[] = { TRUE, FALSE, TRUE, TRUE };
+  static gboolean values[] = { TRUE, FALSE, TRUE, TRUE };
 
   *length = 4;
   *bools = values;
@@ -1601,7 +1601,7 @@ gi_marshalling_tests_array_bool_out (gboolean **bools, gint *length)
 void
 gi_marshalling_tests_array_unichar_out (gunichar **chars, gint *length)
 {
-  static const gunichar values[] = GI_MARSHALLING_TESTS_CONSTANT_UCS4;
+  static gunichar values[] = GI_MARSHALLING_TESTS_CONSTANT_UCS4;
   *length = 12;
   *chars = values;
 }
@@ -1722,9 +1722,9 @@ gunichar *
 gi_marshalling_tests_array_zero_terminated_return_unichar (void)
 {
   static const gunichar value[] = GI_MARSHALLING_TESTS_CONSTANT_UCS4;
-  unsigned ix;
-  gunichar *retval = g_new0(gunichar, 13);
-  memcpy (retval, value, 12 * sizeof (gunichar));
+  gunichar *retval = g_new(gunichar, G_N_ELEMENTS(value) + 1); //+1 for endofline char
+  memcpy (retval, value, sizeof (value));
+  retval[G_N_ELEMENTS(value)] = 0;
   return retval;
 }
 
