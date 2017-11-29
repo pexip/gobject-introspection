@@ -63,7 +63,7 @@ if dep_type == 'internal'
   # gnome.generate_gir() because that will take care of dependencies, include
   # paths, library paths, and more that we now have to handle manually when
   # building with subprojects.
-  subprojdir = 'subprojects'
+  subprojdir = '.'
   scanner_command += [
     '--extra-library=glib-2.0',
     '--extra-library=gmodule-2.0',
