@@ -67,7 +67,7 @@ for f in glob('@0@'):
 '''
 
 # GLib
-glib_files = files('glib-2.0.c')
+glib_files = []
 glib_command = scanner_command + [
   '--identifier-prefix=G',
   '--symbol-prefix=g',
@@ -159,6 +159,11 @@ foreach h : glib_headers
   endif
 endforeach
 
+# NOTE: Always add this last so that we prefer the annotations in the sources
+# (if they are available) since it contains 'backup' annotations that can be
+# out of date.
+glib_files += files('glib-2.0.c')
+
 glib_gir = custom_target('gir-glib',
   input: glib_files,
   output: 'GLib-2.0.gir',
@@ -179,7 +184,7 @@ glib_gir = custom_target('gir-glib',
 gir_files += glib_gir
 
 # GObject
-gobject_files = files('gobject-2.0.c')
+gobject_files = []
 gobject_command = scanner_command + [
   '--identifier-prefix=G',
   '--c-include=glib-object.h',
@@ -217,6 +222,11 @@ foreach h : gobject_headers
   endif
 endforeach
 
+# NOTE: Always add this last so that we prefer the annotations in the sources
+# (if they are available) since it contains 'backup' annotations that can be
+# out of date.
+gobject_files += files('gobject-2.0.c')
+
 gobject_gir = custom_target('gir-gobject',
   input: gobject_files,
   output: 'GObject-2.0.gir',
@@ -236,7 +246,7 @@ gobject_gir = custom_target('gir-gobject',
 gir_files += gobject_gir
 
 # GModule
-gmodule_files = files('gmodule-2.0.c')
+gmodule_files = []
 gmodule_command = scanner_command + [
   '--identifier-prefix=G',
   '--symbol-prefix=g',
@@ -259,6 +269,11 @@ else
                     join_paths(glibproj_incdir, 'gmodule', 'gmodule.c')]
 endif
 
+# NOTE: Always add this last so that we prefer the annotations in the sources
+# (if they are available) since it contains 'backup' annotations that can be
+# out of date.
+gmodule_files += files('gmodule-2.0.c')
+
 gir_files += custom_target('gir-gmodule',
   input: gmodule_files,
   output: 'GModule-2.0.gir',
@@ -275,7 +290,7 @@ gir_files += custom_target('gir-gmodule',
 )
 
 ## Gio
-gio_files = files('gio-2.0.c')
+gio_files = []
 gio_command = scanner_command + [
   '--identifier-prefix=G',
   '--symbol-prefix=g',
@@ -341,6 +356,11 @@ if giounix_dep.found()
     gio_command += '--c-include=gio/@0@'.format(hbase)
   endforeach
 endif
+
+# NOTE: Always add this last so that we prefer the annotations in the sources
+# (if they are available) since it contains 'backup' annotations that can be
+# out of date.
+gio_files += files('gio-2.0.c')
 
 gir_files += custom_target('gir-gio',
   input: gio_files,
