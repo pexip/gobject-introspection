@@ -40,7 +40,6 @@ foreach f : giscanner_files
 endforeach
 
 install_subdir('doctemplates', install_dir: giscannerdir)
-install_subdir('collections', install_dir: giscannerdir)
 
 flex = find_program('flex', 'win_flex')
 bison = find_program('bison', 'win_bison')
