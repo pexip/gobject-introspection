@@ -52,6 +52,10 @@
     #define MOD_ERROR_RETURN
 #endif
 
+#ifndef _GI_EXTERN
+#define _GI_EXTERN extern
+#endif
+
 /* forward declaration */
 _GI_EXTERN MOD_INIT(_giscanner);
 
