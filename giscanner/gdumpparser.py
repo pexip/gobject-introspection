@@ -181,7 +181,7 @@ blob containing data gleaned from GObject's primitive introspection."""
             return parse(out_path)
         finally:
             if not utils.have_debug_flag('save-temps'):
-                shutil.rmtree(self._binary.tmpdir)
+                shutil.rmtree(self._binary.tmpdir, True)
 
     # Parser
 
