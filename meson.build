@@ -73,6 +73,10 @@ endif
 libffi_dep = dependency('libffi',
   fallback : ['libffi', 'ffi_dep'])
 
+prefix = join_paths(get_option('prefix'))
+datarootdir = join_paths(prefix, get_option('datadir'))
+gidatadir = join_paths(datarootdir, 'gobject-introspection-1.0')
+
 subdir('girepository')
 subdir('tools')
 subdir('giscanner')
@@ -84,13 +88,12 @@ subdir('tests')
 install_data('Makefile.introspection', install_dir: join_paths(get_option('datadir'), 'gobject-introspection-1.0'))
 install_data('m4/introspection.m4', install_dir: join_paths(get_option('datadir'), 'aclocal'))
 
-prefix = join_paths(get_option('prefix'))
 pkgconfig_conf = configuration_data()
 pkgconfig_conf.set('prefix', prefix)
 pkgconfig_conf.set('exec_prefix', '${prefix}')
 pkgconfig_conf.set('bindir', join_paths('${prefix}', get_option('bindir')))
 pkgconfig_conf.set('libdir', join_paths('${prefix}', get_option('libdir')))
-pkgconfig_conf.set('datarootdir', join_paths('${prefix}', get_option('datadir')))
+pkgconfig_conf.set('datarootdir', datarootdir)
 pkgconfig_conf.set('datadir', '${datarootdir}')
 pkgconfig_conf.set('includedir', join_paths('${prefix}', get_option('includedir')))
 if host_system == 'windows' or host_system == 'cygwin'
