@@ -36,42 +36,42 @@ typedef_lib = shared_library('typedef-1.0',
   sources: ['typedefs.c'],
   include_directories : [configinc, gitests_inc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + custom_c_args,
-  dependencies: [gobject_dep],
+  dependencies: [glib_dep, gobject_dep],
 )
 
 sletter_lib = shared_library('sletter-1.0',
   sources: ['sletter.c'],
   include_directories : [configinc, gitests_inc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + custom_c_args,
-  dependencies: [gio_dep],
+  dependencies: [glib_dep, gio_dep, gmodule_dep],
 )
 
 warnlib_lib = shared_library('warnlib-1.0',
   sources: ['../../gobject-introspection-tests/warnlib.c'],
   include_directories : [configinc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + custom_c_args,
-  dependencies: [gio_dep],
+  dependencies: [glib_dep, gio_dep, gmodule_dep, gobject_dep],
 )
 
 utility_lib = shared_library('utility-1.0',
   sources: ['../../gobject-introspection-tests/utility.c'],
   include_directories : [configinc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + custom_c_args,
-  dependencies: [gobject_dep],
+  dependencies: [glib_dep, gobject_dep],
 )
 
 gtkfrob_lib = shared_library('gtkfrob-1.0',
   sources: ['gtkfrob.c'],
   include_directories : [configinc, gitests_inc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + custom_c_args,
-  dependencies: [gobject_dep],
+  dependencies: [glib_dep, gobject_dep],
 )
 
 gettype_lib = shared_library('gettype-1.0',
   sources: ['gettype.c'],
   include_directories : [configinc, gitests_inc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + custom_c_args,
-  dependencies: [gobject_dep],
+  dependencies: [glib_dep, gobject_dep],
 )
 
 barapp_lib = shared_library('barapp-1.0',
@@ -108,7 +108,7 @@ regress_lib = shared_library('regress-1.0',
   ],
   include_directories : [configinc, include_directories('..')],
   c_args: gi_hidden_visibility_cflags + regress_c_args + custom_c_args,
-  dependencies: [gobject_dep, gio_dep] + regress_deps,
+  dependencies: [glib_dep, gobject_dep, gmodule_dep, gio_dep] + regress_deps,
 )
 
 python_path = run_command(python, ['-c', 'import sys; sys.stdout.write(sys.executable)'], check: true).stdout()
