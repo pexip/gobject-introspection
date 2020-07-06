@@ -706,14 +706,10 @@ raise ValueError."""
         canonical = self._canonicalize_ctype(ctype)
         base = canonical.replace('*', '')
 
-        # While gboolean and _Bool are distinct types, they used to be treated
-        # by scanner as exactly the same one. In general this is incorrect
-        # because of different ABI, but this usually works fine,
-        # so for backward compatibility lets continue for now:
+        # Upstream g-ir-scanner silently allows `bool` to be treated as `gboolean` because
+        # it "mostly works" - however, these types are incompatible and break some bindings.
+        # We therefore intentionally remove this "backwards compatibility" hack.
         # https://gitlab.gnome.org/GNOME/gobject-introspection/merge_requests/24#note_92792
-        if canonical in ('_Bool', 'bool'):
-            canonical = 'gboolean'
-            base = canonical
 
         # Special default: char ** -> ast.Array, same for GStrv
         if (is_return and canonical == 'utf8*') or base == 'GStrv':
