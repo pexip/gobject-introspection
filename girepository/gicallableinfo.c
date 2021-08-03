@@ -491,7 +491,29 @@ gi_type_info_extract_ffi_return_value (GITypeInfo                  *return_info,
                                        GIFFIReturnValue            *ffi_value,
                                        GIArgument                  *arg)
 {
-    switch (g_type_info_get_tag (return_info)) {
+    GITypeTag tag = g_type_info_get_tag (return_info);
+
+    if (g_type_info_is_pointer (return_info)) {
+      switch (tag) {
+      case GI_TYPE_TAG_INT8:
+      case GI_TYPE_TAG_UINT8:
+      case GI_TYPE_TAG_INT16:
+      case GI_TYPE_TAG_UINT16:
+      case GI_TYPE_TAG_INT32:
+      case GI_TYPE_TAG_UINT32:
+      case GI_TYPE_TAG_BOOLEAN:
+      case GI_TYPE_TAG_UNICHAR:
+      case GI_TYPE_TAG_INT64:
+      case GI_TYPE_TAG_UINT64:
+      case GI_TYPE_TAG_FLOAT:
+      case GI_TYPE_TAG_DOUBLE:
+        /* Pointer to a "basic" type. */
+        arg->v_pointer = ffi_value->v_pointer;
+        return;
+      }
+    }
+
+    switch (tag) {
     case GI_TYPE_TAG_INT8:
         arg->v_int8 = (gint8) ffi_value->v_long;
         break;
@@ -727,21 +749,25 @@ g_callable_info_invoke (GIFunctionInfo *info,
 
   g_return_val_if_fail (return_value, FALSE);
   /* See comment for GIFFIReturnValue above */
-  switch (rtag)
-    {
-    case GI_TYPE_TAG_FLOAT:
-      return_value_p = &ffi_return_value.v_float;
-      break;
-    case GI_TYPE_TAG_DOUBLE:
-      return_value_p = &ffi_return_value.v_double;
-      break;
-    case GI_TYPE_TAG_INT64:
-    case GI_TYPE_TAG_UINT64:
-      return_value_p = &ffi_return_value.v_uint64;
-      break;
-    default:
-      return_value_p = &ffi_return_value.v_long;
-    }
+  if (g_type_info_is_pointer (rinfo)) {
+    return_value_p = &ffi_return_value.v_pointer;
+  } else {
+    switch (rtag)
+      {
+      case GI_TYPE_TAG_FLOAT:
+        return_value_p = &ffi_return_value.v_float;
+        break;
+      case GI_TYPE_TAG_DOUBLE:
+        return_value_p = &ffi_return_value.v_double;
+        break;
+      case GI_TYPE_TAG_INT64:
+      case GI_TYPE_TAG_UINT64:
+        return_value_p = &ffi_return_value.v_uint64;
+        break;
+      default:
+        return_value_p = &ffi_return_value.v_long;
+      }
+  }
   ffi_call (&cif, function, return_value_p, args);
 
   if (local_error)
