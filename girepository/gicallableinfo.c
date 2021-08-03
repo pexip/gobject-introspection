@@ -491,10 +491,31 @@ g_callable_info_iterate_return_attributes (GICallableInfo  *info,
 void
 gi_type_tag_extract_ffi_return_value (GITypeTag         return_tag,
                                       GIInfoType        interface_type,
+                                      gboolean          is_pointer,
                                       GIFFIReturnValue *ffi_value,
                                       GIArgument       *arg)
 {
+  if (is_pointer) {
     switch (return_tag) {
+      case GI_TYPE_TAG_INT8:
+      case GI_TYPE_TAG_UINT8:
+      case GI_TYPE_TAG_INT16:
+      case GI_TYPE_TAG_UINT16:
+      case GI_TYPE_TAG_INT32:
+      case GI_TYPE_TAG_UINT32:
+      case GI_TYPE_TAG_BOOLEAN:
+      case GI_TYPE_TAG_UNICHAR:
+      case GI_TYPE_TAG_INT64:
+      case GI_TYPE_TAG_UINT64:
+      case GI_TYPE_TAG_FLOAT:
+      case GI_TYPE_TAG_DOUBLE:
+        /* Pointer to a "basic" type. */
+        arg->v_pointer = ffi_value->v_pointer;
+        return;
+    }
+  }
+
+  switch (return_tag) {
     case GI_TYPE_TAG_INT8:
         arg->v_int8 = (gint8) ffi_value->v_long;
         break;
@@ -575,6 +596,7 @@ gi_type_info_extract_ffi_return_value (GITypeInfo                  *return_info,
     }
 
   gi_type_tag_extract_ffi_return_value (return_tag, interface_type,
+                                        g_type_info_is_pointer (return_info),
                                         ffi_value, arg);
 }
 
@@ -757,21 +779,25 @@ g_callable_info_invoke (GIFunctionInfo *info,
 
   g_return_val_if_fail (return_value, FALSE);
   /* See comment for GIFFIReturnValue above */
-  switch (rtag)
-    {
-    case GI_TYPE_TAG_FLOAT:
-      return_value_p = &ffi_return_value.v_float;
-      break;
-    case GI_TYPE_TAG_DOUBLE:
-      return_value_p = &ffi_return_value.v_double;
-      break;
-    case GI_TYPE_TAG_INT64:
-    case GI_TYPE_TAG_UINT64:
-      return_value_p = &ffi_return_value.v_uint64;
-      break;
-    default:
-      return_value_p = &ffi_return_value.v_long;
-    }
+  if (g_type_info_is_pointer (rinfo)) {
+    return_value_p = &ffi_return_value.v_pointer;
+  } else {
+    switch (rtag)
+      {
+      case GI_TYPE_TAG_FLOAT:
+        return_value_p = &ffi_return_value.v_float;
+        break;
+      case GI_TYPE_TAG_DOUBLE:
+        return_value_p = &ffi_return_value.v_double;
+        break;
+      case GI_TYPE_TAG_INT64:
+      case GI_TYPE_TAG_UINT64:
+        return_value_p = &ffi_return_value.v_uint64;
+        break;
+      default:
+        return_value_p = &ffi_return_value.v_long;
+      }
+  }
   ffi_call (&cif, function, return_value_p, args);
 
   if (local_error)

@@ -46,6 +46,24 @@ gi_type_tag_get_ffi_type_internal (GITypeTag   tag,
                                    gboolean    is_pointer,
 				   gboolean    is_enum)
 {
+  if (is_pointer) {
+    switch (tag) {
+    case GI_TYPE_TAG_INT8:
+    case GI_TYPE_TAG_UINT8:
+    case GI_TYPE_TAG_INT16:
+    case GI_TYPE_TAG_UINT16:
+    case GI_TYPE_TAG_INT32:
+    case GI_TYPE_TAG_UINT32:
+    case GI_TYPE_TAG_BOOLEAN:
+    case GI_TYPE_TAG_UNICHAR:
+    case GI_TYPE_TAG_INT64:
+    case GI_TYPE_TAG_UINT64:
+    case GI_TYPE_TAG_FLOAT:
+    case GI_TYPE_TAG_DOUBLE:
+      /* Pointer to a "basic" type. */
+      return &ffi_type_pointer;
+    }
+  }
   switch (tag)
     {
     case GI_TYPE_TAG_BOOLEAN:
