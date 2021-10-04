@@ -148,6 +148,9 @@ def _get_option_parser():
     parser.add_option("-l", "--library",
                       action="append", dest="libraries", default=[],
                       help="libraries of this unit")
+    parser.add_option("-f",
+                      action="append", dest="fflags", default=[],
+                      help="options of this unit")
     parser.add_option("", "--extra-library",
                       action="append", dest="extra_libraries", default=[],
                       help="Extra libraries to link the binary against")
