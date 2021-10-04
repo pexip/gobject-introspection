@@ -187,6 +187,7 @@ class DumpCompiler(object):
         cflags = pkgconfig.cflags(self._packages,
                                   msvc_syntax=self._compiler.check_is_msvc())
         cflags.extend(self._options.cflags)
+        cflags.extend(["-f" + flag for flag in self._options.fflags])
         return self._compiler.compile(cflags,
                                       self._options.cpp_includes,
                                       sources,
@@ -268,6 +269,8 @@ class DumpCompiler(object):
 
         dll_dirs = utils.dll_dirs()
         dll_dirs.add_dll_dirs(self._packages)
+
+        args.extend(["-f" + flag for flag in self._options.fflags])
 
         if not self._options.quiet:
             print("g-ir-scanner: link: %s" % (
