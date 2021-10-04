@@ -182,6 +182,7 @@ class DumpCompiler(object):
         cflags = pkgconfig.cflags(self._packages,
                                   msvc_syntax=self._compiler.check_is_msvc())
         cflags.extend(self._options.cflags)
+        cflags.extend(["-f" + flag for flag in self._options.fflags])
         return self._compiler.compile(cflags,
                                       self._options.cpp_includes,
                                       sources,
@@ -250,6 +251,8 @@ class DumpCompiler(object):
         if not self._compiler.check_is_msvc():
             for ldflag in shlex.split(os.environ.get('LDFLAGS', '')):
                 args.append(ldflag)
+
+        args.extend(["-f" + flag for flag in self._options.fflags])
 
         if not self._options.quiet:
             print("g-ir-scanner: link: %s" % (
