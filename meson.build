@@ -71,7 +71,7 @@ if cc.get_id() != 'msvc'
 else
     project_c_args += [
       '-FImsvc_recommended_pragmas.h',
-      '-utf-8',
+      #'-utf-8',
     ]
 endif
 
