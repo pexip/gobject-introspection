@@ -1,3 +1,0 @@
-[submodule "gobject-introspection-tests"]
-	path = gobject-introspection-tests
-	url = https://gitlab.gnome.org/GNOME/gobject-introspection-tests.git
