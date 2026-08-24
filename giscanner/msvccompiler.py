@@ -40,7 +40,13 @@ class MSVCCompiler(DistutilsMSVCCompiler):
 
     def __init__(self, verbose=0, dry_run=0, force=0):
         super(DistutilsMSVCCompiler, self).__init__()
-        CCompiler.__init__(self, verbose, dry_run, force)
+        try:
+            CCompiler.__init__(self, verbose, dry_run, force)
+        except TypeError:
+            # Python 3.13 dropped the dry_run parameter from distutils' compiler
+            # base class constructor.
+            CCompiler.__init__(self, verbose, force)
+            self.dry_run = dry_run
         self.__paths = []
         self.__arch = None  # deprecated name
         self.initialized = False
